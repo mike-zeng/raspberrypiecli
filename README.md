@@ -6,9 +6,15 @@
 - 接受服务端指令
 
 # 使用说明
-raspberrypiecli使用jdk8.0开发，为了运行该程序，需要提高基本的java运行环境(jre)
-首先解压目录并进入，运行rpc脚本即可启动程序
-
+- 环境搭建    
+  - raspberrypiecli使用jdk8.0开发，为了运行该程序，需要提高基本的java运行环境(jre)  
+  - 连接树莓派控制台  
+  - 执行命令`sudo apt-get install oracle-java8-jdk`安装java的环境  
+  - 输入java -v出现版本信息则说明环境搭建成功  
+- 解压目录
+  - 将文件下载到树莓派
+  - 执行命令`tar -zvxf raspberrypiecli.tar.gz`解压
+  - 进入文件夹，找到rpc文件
 - 配置参数
 raspberrypiecli拥有五个配置参数
 ```
