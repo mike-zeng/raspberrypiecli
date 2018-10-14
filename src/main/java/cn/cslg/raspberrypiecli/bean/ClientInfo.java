@@ -1,10 +1,17 @@
 package cn.cslg.raspberrypiecli.bean;
 
-public class ClientInfo {
+import java.io.Serializable;
+
+public class ClientInfo implements Serializable {
     Integer id;
     String password;
 
     public ClientInfo() {
+    }
+
+    public ClientInfo(Integer id, String password) {
+        this.id = id;
+        this.password = password;
     }
 
     public Integer getId() {
@@ -21,5 +28,13 @@ public class ClientInfo {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "ClientInfo{" +
+                "id=" + id +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

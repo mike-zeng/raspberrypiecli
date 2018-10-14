@@ -1,7 +1,9 @@
 package cn.cslg.raspberrypiecli.main;
 
+import cn.cslg.raspberrypiecli.bean.ClientInfo;
 import cn.cslg.raspberrypiecli.bean.ConfigBean;
 import cn.cslg.raspberrypiecli.bean.ServerBean;
+import cn.cslg.raspberrypiecli.socket.SocketManage;
 import cn.cslg.raspberrypiecli.fileupload.FileUpload;
 import cn.cslg.raspberrypiecli.server.Server;
 import cn.cslg.raspberrypiecli.socket.SocketFactory;
@@ -18,6 +20,7 @@ import java.util.List;
  */
 public class Main {
     public static void main(String args[]) {
+        SocketManage socketManage=null;
 
         if (args.length <= 1) {
             System.out.println(new Date()+" 请输入参数");
@@ -32,6 +35,7 @@ public class Main {
             System.out.println(new Date()+" 配置文件加载失败!或者配置文件参数错误");
             return;
         }
+        ClientInfo clientInfo=new ClientInfo(configBean.getId(),configBean.getPassword());
 
         //serverBean获取
         ServerBean serverBeanForUpLoad=new ServerBean(configBean.getIpAddress(),configBean.getPort_upload());
@@ -48,12 +52,31 @@ public class Main {
             }
 
             Socket socket=SocketFactory.getSocket(serverBeanForUpLoad);
-            FileUpload fileUpload=new FileUpload(socket,files);
+            try {
+                socketManage=new SocketManage(socket,clientInfo);
+            }catch (Exception e){
+                return;
+            }
+            if (!socketManage.login()){
+                return;
+            }
+
+            FileUpload fileUpload=new FileUpload(socketManage,files);
+            fileUpload.start();
         }
         else if ((args[1].equals("--server") || args[1].equals("-s")) && args.length == 2) {
             //启动服务连接服务器，处理服务器发出的指令
-            Socket socket= SocketFactory.getSocket(serverBeanForCmdServer);
-            Server server=new Server(socket,configBean.getId());
+            try {
+                Socket socket= SocketFactory.getSocket(serverBeanForCmdServer);
+                socketManage=new SocketManage(socket,clientInfo);
+                if (!socketManage.login()){
+                    return;
+                }
+            }catch (Exception e){
+                return;
+            }
+
+            Server server=new Server(socketManage,configBean.getId());
             server.start();
         }
         else if (args[1].equals("--config")||args[1].equals("-c")&&args.length==2){
@@ -75,6 +98,8 @@ public class Main {
             System.out.println(new Date()+" 输入参数错误");
         }
 
+        //释放资源，结束程序
+        socketManage.close();
         System.out.println("程序结束!");
     }
 

@@ -1,9 +1,10 @@
 package cn.cslg.raspberrypiecli.server;
 
 
+import cn.cslg.raspberrypiecli.socket.SocketManage;
+
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -12,27 +13,21 @@ import java.util.TimerTask;
  * 接受来自服务端的命令，并执行
  */
 public class Server {
-    private Socket socket;
+    private SocketManage socketManage;
     Timer timer=new Timer();
 
-    public Server(Socket socket,int id){
-        this.socket=socket;
+    public Server(SocketManage socketManage,int id){
+        this.socketManage=socketManage;
     }
 
     public void start(){
         try {
-            if (socket==null){
-                System.out.println(new Date()+" 连接服务器失败!");
-                return;
-            }
+            ObjectOutputStream outputStream=socketManage.getObjectOutputStream();
+            ObjectInputStream inputStream=socketManage.getObjectInputStream();
 
-            System.out.println(new Date()+" 已连接服务器!");
-            ObjectOutputStream outputStream=new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream inputStream=new ObjectInputStream(socket.getInputStream());
+//            outputStream.writeObject(true);
 
-            outputStream.writeObject(true);
-
-            inputStream.readObject();
+//            inputStream.readObject();
 
             if (inputStream==null||outputStream==null){
                 System.out.println(new Date()+" 连接服务器失败!");
