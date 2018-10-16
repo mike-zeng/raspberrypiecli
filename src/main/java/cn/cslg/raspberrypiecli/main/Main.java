@@ -99,7 +99,7 @@ public class Main {
         }
 
         //释放资源，结束程序
-        socketManage.close();
+//        socketManage.close();
         System.out.println("程序结束!");
     }
 

@@ -62,13 +62,27 @@ public class SocketManage {
 
     public void close(){
         try {
-            objectOutputStream.close();
-            objectInputStream.close();
-            inputStream.close();
-            objectInputStream.close();
-            socket.close();
-        }catch (Exception e){
+            if (objectOutputStream!=null){
+                objectOutputStream.close();
+            }
 
+            if (objectInputStream!=null){
+                objectInputStream.close();
+            }
+
+            if (inputStream!=null){
+                inputStream.close();
+            }
+
+            if (outputStream!=null){
+                outputStream.close();
+            }
+
+            if (socket!=null){
+                socket.close();
+            }
+        }catch (Exception e){
+            return;
         }
     }
 }
